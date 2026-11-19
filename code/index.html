@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robot Lili Pico — source code</title>
+<style>body{font-family:system-ui,sans-serif;max-width:760px;margin:0 auto;padding:24px;line-height:1.6;color:#222}a{color:#1a5fb4}code{background:#f2f2f2;padding:1px 4px}</style></head>
+<body>
+<h1>Robot Lili Pico — source code (for YouTube API Services review)</h1>
+<p>Strictly internal tool with a single user: the owner of the YouTube channel
+<a href="https://www.youtube.com/@Lili-PicoTv">Lili &amp; Pico</a>. It runs on GitHub Actions in a private repository.
+No credentials are included here: OAuth client credentials are stored in encrypted GitHub secrets and the refresh token is stored encrypted.</p>
+<ul>
+<li><a href="robot/envoyer.py">robot/envoyer.py</a> — complete upload script: resumable <code>videos.insert</code> (private, scheduled <code>publishAt</code>, made for kids), then <code>captions.insert</code> and <code>thumbnails.set</code>. Disabled until the audit is approved.</li>
+<li><a href="robot/programmer.py">robot/programmer.py</a> — daily scheduler: finds the owner's private uploads, applies metadata, localizations, captions and thumbnail, then schedules publishing at midnight (Montreal time).</li>
+<li><a href="robot/fiches.py">robot/fiches.py</a> — reads the episode metadata files (titles, descriptions, tags, captions, thumbnails).</li>
+<li><a href="robot/jeton.py">robot/jeton.py</a> — OAuth 2.0 token handling (encrypted refresh token, access token refresh).</li>
+<li><a href="workflows/programmer.yml">workflows/programmer.yml</a> — GitHub Actions workflow.</li>
+</ul>
+<p>Endpoints used: videos.insert, videos.list, videos.update, captions.list, captions.insert, captions.update, thumbnails.set, channels.list, playlistItems.list.</p>
+<p><a href="../">Home</a> · <a href="../privacy.html">Privacy Policy</a></p>
+</body></html>

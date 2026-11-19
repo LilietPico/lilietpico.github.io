@@ -1,0 +1,41 @@
+name: Programmer les épisodes
+
+# Deux passages par jour : 12 h 17 et 20 h 17 (heure normale de Montréal ;
+# une heure plus tard à l'heure d'été). La publication, elle, se fait à minuit par YouTube.
+on:
+  # Passages automatiques (activés après le premier test) :
+  # schedule:
+  #   - cron: "17 1,17 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "verifier = lecture seule ; appliquer = programme les nouvelles vidéos privées"
+        type: choice
+        options: [verifier, appliquer]
+        default: verifier
+
+permissions:
+  contents: read
+
+concurrency:
+  group: youtube-ecriture
+  cancel-in-progress: false
+
+jobs:
+  programmer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Installer les dépendances
+        run: pip install requests==2.32.3 cryptography==43.0.3
+      - name: Programmer
+        env:
+          GOOGLE_DESKTOP_CLIENT_ID: ${{ secrets.GOOGLE_DESKTOP_CLIENT_ID }}
+          GOOGLE_DESKTOP_CLIENT_SECRET: ${{ secrets.GOOGLE_DESKTOP_CLIENT_SECRET }}
+          # Les passages automatiques appliquent ; un lancement manuel suit le choix fait.
+          MODE: ${{ github.event_name == 'schedule' && 'appliquer' || inputs.mode }}
+        run: python robot/programmer.py
